@@ -19,17 +19,12 @@ deploy_job:
     - ssh-keyscan -H $AWS_EC2_HOST >> ~/.ssh/known_hosts
 
   script:
-    # Create the deploy directory if it doesn't exist
     - ssh -i ~/.ssh/id_rsa $AWS_EC2_USER@$AWS_EC2_HOST "mkdir -p $EC2_DEPLOY_PATH"
 
-    # Stop the current Spring Boot application if it's running
     - ssh -i ~/.ssh/id_rsa $AWS_EC2_USER@$AWS_EC2_HOST "pkill -f 'java.*app.jar' || true"
 
-    # Remove the old JAR file
     - ssh -i ~/.ssh/id_rsa $AWS_EC2_USER@$AWS_EC2_HOST "rm -f $EC2_DEPLOY_PATH/app.jar"
 
-    # Copy the new JAR file to the EC2 instance
     - scp -i ~/.ssh/id_rsa build/libs/*.jar $AWS_EC2_USER@$AWS_EC2_HOST:$EC2_DEPLOY_PATH/app.jar
 
-    # Start the Spring Boot application
     - ssh -i ~/.ssh/id_rsa $AWS_EC2_USER@$AWS_EC2_HOST "nohup java -jar $EC2_DEPLOY_PATH/app.jar > /dev/null 2>&1 &"

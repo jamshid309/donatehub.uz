@@ -12,19 +12,7 @@ deploy_job:
   stage: deploy
   image: alpine:latest
   before_script:
-    - apk add --no-cache openssh-client
-    - mkdir -p ~/.ssh
-    - echo "$AWS_SSH_KEY" > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
-    - ssh-keyscan -H $AWS_EC2_HOST >> ~/.ssh/known_hosts
-
+    - apk add --no-cache openssh
   script:
-    - ssh -i ~/.ssh/id_rsa $AWS_EC2_USER@$AWS_EC2_HOST "mkdir -p $EC2_DEPLOY_PATH"
-
-    - ssh -i ~/.ssh/id_rsa $AWS_EC2_USER@$AWS_EC2_HOST "pkill -f 'java.*app.jar' || true"
-
-    - ssh -i ~/.ssh/id_rsa $AWS_EC2_USER@$AWS_EC2_HOST "rm -f $EC2_DEPLOY_PATH/app.jar"
-
-    - scp -i ~/.ssh/id_rsa build/libs/*.jar $AWS_EC2_USER@$AWS_EC2_HOST:$EC2_DEPLOY_PATH/app.jar
-
-    - ssh -i ~/.ssh/id_rsa $AWS_EC2_USER@$AWS_EC2_HOST "nohup java -jar $EC2_DEPLOY_PATH/app.jar > /dev/null 2>&1 &"
+    - scp build/libs/my-app.jar $AWS_EC2_USER@$AWS_EC2_HOST:/home/ec2-user/app/
+    - ssh $AWS_EC2_USER@$AWS_EC2_HOST 'java -jar /home/ec2-user/app/my-app.jar'

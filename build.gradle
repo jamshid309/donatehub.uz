@@ -60,7 +60,8 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-jar {
+bootJar {
     archiveBaseName.set("my-app")
+    archiveVersion.set("")
     archiveClassifier.set("")
 }

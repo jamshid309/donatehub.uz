@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 public interface UserInfo {
     Long getId();
 
-    String getFirstName();
-
     String getUsername();
+
+    String getEmail();
 
     String getDescription();
 

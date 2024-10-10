@@ -11,7 +11,6 @@ import donatehub.domain.constants.UserRole;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginResponse {
-    private UserRole role;
     private String accessToken;
     private String refreshToken;
 }

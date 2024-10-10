@@ -1,0 +1,289 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Personal portfolio of a web developer.">
+    <title>My Portfolio</title>
+    <style>
+        /* styles.css */
+        :root {
+            --main-bg-color: #000;
+            --text-color: #fff;
+            --accent-color: #f1f1f1;
+            --secondary-color: #555;
+        }
+
+        /* Umumiy stillar */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--main-bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* Header stillari */
+        .header {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links li a {
+            text-decoration: none;
+            color: var(--text-color);
+        }
+
+        .nav-links li a:hover {
+            color: var(--accent-color);
+        }
+
+        /* Home Section */
+        .home-section {
+            text-align: center;
+            padding: 100px 20px;
+        }
+
+        .home-section h1 {
+            font-size: 2.5rem;
+        }
+
+        .home-section p {
+            font-size: 1.2rem;
+            margin: 20px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border: 2px solid var(--text-color);
+            color: var(--text-color);
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: var(--text-color);
+            color: var(--main-bg-color);
+        }
+
+        /* Projects Section */
+        .projects-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .project-card {
+            background-color: var(--secondary-color);
+            padding: 30px;
+            width: 280px;
+            border-radius: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .project-card h3 {
+            color: var(--accent-color);
+        }
+
+        .project-card p {
+            color: var(--text-color);
+        }
+
+        .project-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .project-card .btn {
+            margin-top: 15px;
+            background-color: var(--accent-color);
+            color: var(--main-bg-color);
+            border: none;
+            padding: 10px 15px;
+        }
+
+        .project-card .btn:hover {
+            background-color: var(--text-color);
+            color: var(--main-bg-color);
+        }
+
+        /* Contact Section */
+        .contact-section {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        /* Footer Section */
+        footer {
+            background-color: var(--secondary-color);
+            color: var(--accent-color);
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            margin-bottom: 10px;
+        }
+
+        .footer-content h3 {
+            margin-bottom: 15px;
+        }
+
+        .footer-content p {
+            margin-bottom: 20px;
+        }
+
+        .socials {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .socials li {
+            display: inline;
+        }
+
+        .socials li a {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            transition: color 0.3s;
+        }
+
+        .socials li a:hover {
+            color: var(--text-color);
+        }
+
+        .footer-bottom {
+            background-color: var(--main-bg-color);
+            padding: 10px 0;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: var(--accent-color);
+        }
+
+        /* Responsivlik uchun stillar */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .home-section h1 {
+                font-size: 2rem;
+            }
+
+            .projects-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .project-card {
+                width: 90%;
+            }
+        }
+    </style>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+<body>
+<!-- Header -->
+<header>
+    <nav class="navbar">
+        <div class="logo">My Portfolio</div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About Me</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- Home Section -->
+<section id="home" class="section home-section">
+    <h1>Welcome to My Portfolio</h1>
+    <p>I'm a web developer focused on creating beautiful and functional websites.</p>
+    <a href="#projects" class="btn">View My Projects</a>
+</section>
+
+<!-- About Me Section -->
+<section id="about" class="section about-section">
+    <h2>About Me</h2>
+    <p>Hello! I'm a passionate web developer with expertise in front-end and back-end technologies. I love building projects that solve real-world problems.</p>
+</section>
+
+<!-- Projects Section -->
+<section id="projects" class="section projects-section">
+    <h2>My Projects</h2>
+    <div class="projects-container">
+        <div class="project-card">
+            <h3>Project 1</h3>
+            <p>A brief description of project 1.</p>
+            <a href="#" class="btn">View Details</a>
+        </div>
+        <div class="project-card">
+            <h3>Project 2</h3>
+            <p>A brief description of project 2.</p>
+            <a href="#" class="btn">View Details</a>
+        </div>
+        <div class="project-card">
+            <h3>Project 3</h3>
+            <p>A brief description of project 3.</p>
+            <a href="#" class="btn">View Details</a>
+        </div>
+    </div>
+</section>
+
+<section id="contact" class="section contact-section">
+    <h2>Contact</h2>
+    <p>If you’d like to work with me or just say hello, feel free to send me a message!</p>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-content">
+        <h3>My Portfolio</h3>
+        <p>Thank you for visiting my portfolio website. Feel free to reach out on any of the platforms below.</p>
+        <ul class="socials">
+            <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+            <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+            <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+            <li><a href="#"><i class="fab fa-github"></i></a></li>
+        </ul>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2024 My Portfolio. All rights reserved.</p>
+    </div>
+</footer>
+</body>
+</html>

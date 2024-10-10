@@ -1,12 +1,14 @@
 package donatehub.service.user;
 
 import donatehub.domain.projections.*;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 import donatehub.domain.entities.UserEntity;
 import donatehub.domain.request.UserUpdateRequest;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
     UserInfoForDonate findByChannelName(String channelName);
@@ -16,6 +18,8 @@ public interface UserService {
     Page<UserInfoForView> searchUsers(String text, Boolean action, int page, int size);
 
     UserInfo getById(Long id);
+
+    UserEntity save(UserEntity user);
 
     UserEntity findById(Long id);
 
@@ -27,15 +31,17 @@ public interface UserService {
 
     void setOnline(Long streamerId, boolean action);
 
-    List<UserStatistic> getStatisticsOfRegister(int days);
-
-    List<UserStatistic> getStatisticOfLastOnline(int days);
-
     void fullRegister(UserEntity user, UserUpdateRequest updateReq, MultipartFile profileImg, MultipartFile bannerImg);
 
-    UserFullStatistic getFullStatistic();
+    UserStatistic getUsersStatistic();
 
     ProfitStatistic getProfitStatistic();
 
     List<UserEntity> getAllEnabledUsers();
+
+    List<AdminStatisticByGraphic> adminStatisticByGraphic(int days);
+
+    List<UserStatisticByGraphic> userStatisticByGraphic(int days, Long streamerId);
+
+    Optional<UserEntity> findByEmail(String usernameOrEmail);
 }

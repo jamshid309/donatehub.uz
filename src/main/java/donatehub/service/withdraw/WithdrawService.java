@@ -1,6 +1,6 @@
 package donatehub.service.withdraw;
 
-import donatehub.domain.projections.WithdrawFullStatistic;
+import donatehub.domain.projections.WithdrawStatistic;
 import org.springframework.data.domain.Page;
 import donatehub.domain.entities.WithdrawEntity;
 import donatehub.domain.constants.WithdrawStatus;
@@ -17,5 +17,7 @@ public interface WithdrawService {
 
     Page<WithdrawInfo> getWithdrawsOfStreamerByStatus(Long streamerId, int page, int size, WithdrawStatus status);
 
-    WithdrawFullStatistic getFullStatistic();
+    WithdrawStatistic getStatistic();
+
+    WithdrawStatistic getStatisticOfStreamer(Long streamerId);
 }

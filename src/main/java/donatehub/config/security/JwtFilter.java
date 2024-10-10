@@ -23,12 +23,10 @@ import java.io.IOException;
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
     private final UserService userService;
-    private final Logger logger;
 
-    public JwtFilter(JwtProvider jwtProvider, UserService userService, @Qualifier("log") Logger logger) {
+    public JwtFilter(JwtProvider jwtProvider, UserService userService) {
         this.jwtProvider = jwtProvider;
         this.userService = userService;
-        this.logger = logger;
     }
 
     @Override
@@ -38,18 +36,13 @@ public class JwtFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain) throws ServletException, IOException {
         String token = request.getHeader("Authorization");
 
-        String clientIp = request.getRemoteAddr();
-        String requestUri = request.getRequestURI();
-
-        logger.info("Client IP: {} \n Request URI: {}", clientIp, requestUri);
-
         if (token != null && token.startsWith("Bearer ")) {
             String subToken = token.substring(7);
             Long userId = jwtProvider.extractUserId(subToken);
 
             UserEntity user = userService.findById(userId);
 
-            if (user.getFullRegisteredAt() == null) {
+            if (!user.getFullRegistered()) {
                 response.setStatus(HttpStatus.CONFLICT.value());
                 response.getWriter().write("Siz to'liq registratsiyadan o'tmagansiz iltimos registratsiyani amalga oshiring");
                 return;

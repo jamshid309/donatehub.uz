@@ -1,7 +1,10 @@
 package donatehub.controller;
 
-import donatehub.config.security.JwtProvider;
+import donatehub.domain.request.LoginRequest;
 import donatehub.domain.request.RefreshTokenRequest;
+import donatehub.domain.request.RegisterRequest;
+import donatehub.domain.request.TelegramAuthRequest;
+import donatehub.service.oauth.TelegramAuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,10 +14,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import donatehub.domain.request.AuthRequest;
 import donatehub.domain.response.ExceptionResponse;
 import donatehub.domain.response.LoginResponse;
 import donatehub.service.auth.AuthService;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * AuthController - Telegram orqali foydalanuvchilarni autentifikatsiya qilish uchun REST API.
@@ -25,15 +28,26 @@ import donatehub.service.auth.AuthService;
 @Tag(name = "Auth", description = "Foydalanuvchilarni Telegram orqali autentifikatsiya qilish uchun API metodlari")
 public class AuthController {
     private final AuthService authService;
+    private final TelegramAuthService telegramAuthService;
 
-    @PostMapping
+    @PostMapping("/register")
+    public void register(@RequestPart @Valid RegisterRequest registerRequest,@RequestPart(required = false) MultipartFile profileImage, @RequestPart(required = false) MultipartFile bannerImage) {
+        authService.register(registerRequest, profileImage, bannerImage);
+    }
+
+    @PostMapping("/login")
+    public LoginResponse login(@RequestBody @Valid LoginRequest loginRequest) {
+        return authService.login(loginRequest);
+    }
+
+    @PostMapping("/oauth/telegram")
     @Operation(
             summary = "Foydalanuvchini Telegram orqali autentifikatsiya qilish",
             description = "Telegramdan kelgan autentifikatsiya so'rovlarini qabul qiladi va foydalanuvchining tizimga kirishini ta'minlaydi.",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Telegram orqali autentifikatsiya uchun foydalanuvchi ma'lumotlari",
                     required = true,
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthRequest.class))
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = TelegramAuthRequest.class))
             ),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Muvaffaqiyatli autentifikatsiya", content = @Content(mediaType = "application/json", schema = @Schema(implementation = LoginResponse.class))),
@@ -42,9 +56,9 @@ public class AuthController {
             }
     )
     public LoginResponse auth(
-            @RequestBody @Valid @Parameter(description = "Foydalanuvchining autentifikatsiya uchun kerakli ma'lumotlar") AuthRequest authRequest
+            @RequestBody @Valid @Parameter(description = "Foydalanuvchining autentifikatsiya uchun kerakli ma'lumotlar") TelegramAuthRequest telegramAuthRequest
     ) {
-        return authService.login(authRequest);
+        return telegramAuthService.login(telegramAuthRequest);
     }
 
     @PostMapping("/refresh-token")

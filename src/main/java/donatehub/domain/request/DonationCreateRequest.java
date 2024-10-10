@@ -1,8 +1,6 @@
 package donatehub.domain.request;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,12 +12,13 @@ import donatehub.domain.constants.PaymentMethod;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DonationCreateRequest {
-    @NotBlank
+    @NotEmpty(message = "Ism bo'sh bo'lmasligi kerak")
     private String donaterName;
-    @NotBlank
+
+    @NotEmpty(message = "Xabar bo'sh bo'lmasligi kerak")
     private String message;
-    @Min(value = 1000, message = "Minimal donat summasi 1000 so'm")
+
+    @Min(value = 100, message = "Minimal donat summasi 100 so'm")
+    @Max(value = 100_000_001, message = "Maksimal donat summasi 100_000_001 so'm")
     private Float amount;
-    @NotNull
-    private PaymentMethod method;
 }

@@ -1,7 +1,8 @@
 package donatehub.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import donatehub.domain.request.AuthRequest;
+import donatehub.domain.request.RegisterRequest;
+import donatehub.domain.request.TelegramAuthRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -24,6 +25,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class UserEntity implements UserDetails {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true)
     private Long id;
 
@@ -35,11 +37,10 @@ public class UserEntity implements UserDetails {
     @Column(name = "update_at")
     private LocalDateTime updateAt;
 
-    @Column(name = "first_name")
-    private String firstName;
-
     @Column(unique = true)
     private String username;
+
+    private String email;
 
     private String description;
 
@@ -60,6 +61,8 @@ public class UserEntity implements UserDetails {
 
     private String token;
 
+    private String password;
+
     private Boolean online;
 
     private Boolean enable;
@@ -71,32 +74,53 @@ public class UserEntity implements UserDetails {
     @Column(name = "min_donation_amount")
     private Float minDonationAmount;
 
-    @Column(name = "full_registered_at")
-    private LocalDateTime fullRegisteredAt;
+    @Column(name = "full_registered")
+    private Boolean fullRegistered;
 
     private Float balance;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
-    }
-
-    @Override
-    public String getPassword() {
-        return null;
-    }
-
-    public static UserEntity from(AuthRequest authRequest){
+    public static UserEntity from(TelegramAuthRequest telegramAuthRequest) {
         return UserEntity.builder()
-                .id(authRequest.getId())
-                .online(false)
-                .enable(false)
-                .firstName(authRequest.getFirstName())
-                .username(authRequest.getUsername())
-                .balance(0f)
+                .id(telegramAuthRequest.getId())
+                .username(telegramAuthRequest.getFirstName())
                 .role(UserRole.STREAMER)
                 .token(UUID.randomUUID().toString())
+                .online(false)
+                .enable(false)
+                .minDonationAmount(1000f)
+                .balance(0f)
                 .lastOnlineAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now())
+                .fullRegistered(false)
+                .updateAt(LocalDateTime.now())
                 .build();
+    }
+
+    public static UserEntity from(RegisterRequest telegramAuthRequest, String profileImgUrl, String bannerImgUrl) {
+        return UserEntity.builder()
+                .username(telegramAuthRequest.getUsername())
+                .email(telegramAuthRequest.getEmail())
+                .password(telegramAuthRequest.getPassword())
+                .description(telegramAuthRequest.getDescription())
+                .channelUrl(telegramAuthRequest.getChannelUrl())
+                .channelName(telegramAuthRequest.getChannelName())
+                .profileImgUrl(profileImgUrl)
+                .bannerImgUrl(bannerImgUrl)
+                .role(UserRole.STREAMER)
+                .token(UUID.randomUUID().toString())
+                .online(false)
+                .enable(false)
+                .minDonationAmount(1000f)
+                .balance(0f)
+                .lastOnlineAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now())
+                .fullRegistered(false)
+                .updateAt(LocalDateTime.now())
+                .build();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role));
     }
 }

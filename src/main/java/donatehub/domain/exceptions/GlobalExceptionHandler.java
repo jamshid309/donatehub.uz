@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handler(AccessDeniedException ex) {
         logger.error("Access denied: \n{}, status: {}", ex.getMessage(), HttpStatus.FORBIDDEN);
 
-        return new ResponseEntity<>("Siz ushbu resursga kirishga ruxsat etilmagan", HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>("Sizga ushbu resursga kirishga ruxsat berilmagan", HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(BaseException.class)

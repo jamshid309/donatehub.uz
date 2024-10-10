@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 public interface UserInfoForView {
     Long getId();
 
-    String getFirstName();
-
     String getUsername();
+
+    String getEmail();
 
     String getProfileImgUrl();
 

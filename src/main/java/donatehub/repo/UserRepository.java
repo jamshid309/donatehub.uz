@@ -17,45 +17,40 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     Optional<UserInfoForDonate> findByChannelNameIgnoreCase(String username);
 
-    Page<UserInfoForView> getAllByEnableAndRoleOrderByFullRegisteredAt(Boolean approved, Pageable pageable, UserRole userRole);
+    Page<UserInfoForView> getAllByEnableAndRoleOrderByFullRegistered(Boolean approved, Pageable pageable, UserRole userRole);
 
-    @Query("SELECT u FROM users_table u WHERE (LOWER(u.firstName) LIKE LOWER(CONCAT('%', :firstName, '%')) OR LOWER(u.username) LIKE LOWER(CONCAT('%', :username, '%'))) AND u.enable = :enable ORDER BY u.lastOnlineAt")
-    Page<UserInfoForView> findAllByFirstNameOrUsernameAndEnable(@Param("firstName") String firstName, @Param("username") String username, @Param("enable") Boolean enable, Pageable pageable);
-
-    @Query(
-            value = "SELECT days AS day, COALESCE(COUNT(us.*), 0) as count " +
-                    "FROM generate_series(current_date - INTERVAL '1 day' * :days, current_date, '1 day'::interval) AS days " +
-                    "LEFT JOIN users_table us ON us.full_registered_at::date = days " +
-                    "GROUP BY days " +
-                    "ORDER BY days",
-            nativeQuery = true
-    )
-    List<UserStatistic> getStatisticOfRegister(@Param("days") int days);
+    @Query("SELECT u FROM users_table u WHERE (LOWER(u.email) LIKE LOWER(CONCAT('%', :email, '%')) OR LOWER(u.username) LIKE LOWER(CONCAT('%', :username, '%'))) AND u.enable = :enable ORDER BY u.lastOnlineAt")
+    Page<UserInfoForView> findAllByFirstNameOrUsernameAndEnable(@Param("email") String email, @Param("username") String username, @Param("enable") Boolean enable, Pageable pageable);
 
     @Query(
-            value = "SELECT days AS day, COALESCE(COUNT(us.*), 0) as count " +
-                    "FROM generate_series(current_date - INTERVAL '1 day' * :days, current_date, '1 day'::interval) AS days " +
-                    "LEFT JOIN users_table us ON us.last_online_at::date = days " +
-                    "GROUP BY days " +
-                    "ORDER BY days",
-            nativeQuery = true
-    )
-    List<UserStatistic> getStatisticOfLastOnline(@Param("days") int days);
-
-    @Query(
-            value = "SELECT days AS day, " +
-                    "COALESCE(COUNT(DISTINCT us.id), 0) AS users, " +
+            value = "SELECT days AS date, " +
+                    "COALESCE(COUNT(DISTINCT us.id), 0) AS onlineUsers, " +
+                    "COALESCE(COUNT(DISTINCT us2.id), 0) AS registeredUsers, " +
                     "COALESCE(COUNT(DISTINCT dt.id), 0) AS donations, " +
                     "COALESCE(COUNT(DISTINCT wt.id), 0) AS withdraws " +
                     "FROM generate_series(current_date - INTERVAL '1 day' * :days, current_date, '1 day'::interval) AS days " +
                     "LEFT JOIN users_table us ON us.last_online_at::date = days " +
-                    "LEFT JOIN donations_table dt ON dt.created_at::date = days AND dt.completed = true " +
+                    "LEFT JOIN donations_table dt ON dt.created_at::date = days " +
                     "LEFT JOIN withdraws_table wt ON wt.created_at::date = days " +
+                    "LEFT JOIN users_table us2 ON us2.created_at::date = days " +
                     "GROUP BY days " +
                     "ORDER BY days",
             nativeQuery = true
     )
     List<AdminStatisticByGraphic> getStatistic(@Param("days") int days);
+
+    @Query(
+            value = "SELECT days AS day, " +
+                    "COALESCE(COUNT(DISTINCT dt.id), 0) AS donations, " +
+                    "COALESCE(COUNT(DISTINCT wt.id), 0) AS withdraws " +
+                    "FROM generate_series(current_date - INTERVAL '1 day' * :days, current_date, '1 day'::interval) AS days " +
+                    "LEFT JOIN donations_table dt ON dt.created_at::date = days AND dt.streamer_id = :id " +
+                    "LEFT JOIN withdraws_table wt ON wt.created_at::date = days and wt.streamer_id = :id " +
+                    "GROUP BY days " +
+                    "ORDER BY days",
+            nativeQuery = true
+    )
+    List<UserStatisticByGraphic> getStatisticOfStreamer(@Param("days") int days, @Param("id") Long id);
 
     @Query(
             value = """
@@ -68,12 +63,12 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
                 """,
             nativeQuery = true
     )
-    UserFullStatistic getFullStatistic();
+    UserStatistic getUsersStatistic();
 
     @Query(
             value = """
             select
-                coalesce(sum(case when d.completed = true then d.commission end), 0) as donationCommissionsAmount,
+                coalesce(sum(d.commission), 0) as donationCommissionsAmount,
                 coalesce(sum(case when w.status = 'COMPLETED' then w.commission end), 0) as withdrawCommissionsAmount,
                 coalesce(sum(u.balance), 0) as currentStreamersBalance
             from users_table u
@@ -85,4 +80,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     ProfitStatistic getProfitStatistic();
 
     List<UserEntity> getAllByEnableTrue();
+
+    Optional<UserEntity> findByEmailOrUsername(String email, String username);
 }

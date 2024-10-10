@@ -1,7 +1,7 @@
 package donatehub.service.withdraw;
 
 import donatehub.domain.embeddables.WithdrawPayment;
-import donatehub.domain.projections.WithdrawFullStatistic;
+import donatehub.domain.projections.WithdrawStatistic;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.data.domain.Page;
@@ -90,8 +90,13 @@ public class WithdrawServiceImpl implements WithdrawService {
     }
 
     @Override
-    public WithdrawFullStatistic getFullStatistic() {
+    public WithdrawStatistic getStatistic() {
         return repo.getFullStatistic();
+    }
+
+    @Override
+    public WithdrawStatistic getStatisticOfStreamer(Long streamerId) {
+        return repo.getFullStatisticOfStreamer(streamerId);
     }
 
     private Float getCommission(Float amount) {

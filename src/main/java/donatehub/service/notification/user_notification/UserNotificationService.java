@@ -1,7 +1,7 @@
-package donatehub.service.user_notification;
+package donatehub.service.notification.user_notification;
 
 import donatehub.domain.entities.NotificationEntity;
-import donatehub.domain.entities.UserNotificationInfo;
+import donatehub.domain.projections.UserNotificationInfo;
 
 import java.util.List;
 

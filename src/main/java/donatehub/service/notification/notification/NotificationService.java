@@ -1,4 +1,4 @@
-package donatehub.service.notification;
+package donatehub.service.notification.notification;
 
 import donatehub.domain.projections.NotificationInfo;
 import donatehub.domain.request.NotificationRequest;

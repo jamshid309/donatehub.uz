@@ -1,6 +1,6 @@
-package donatehub.domain.entities;
+package donatehub.domain.projections;
 
-import donatehub.domain.projections.NotificationInfo;
+import donatehub.domain.entities.UserNotificationEntity;
 
 /**
  * Projection for {@link UserNotificationEntity}

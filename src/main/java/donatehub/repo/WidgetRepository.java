@@ -1,7 +1,6 @@
 package donatehub.repo;
 
 import donatehub.domain.projections.WidgetInfo;
-import donatehub.domain.projections.WithdrawFullStatistic;
 import org.springframework.data.jpa.repository.JpaRepository;
 import donatehub.domain.entities.WidgetEntity;
 

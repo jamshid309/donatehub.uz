@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthRequest {
+public class TelegramAuthRequest {
     @NotNull
     private Long id;
 

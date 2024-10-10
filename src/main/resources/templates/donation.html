@@ -55,17 +55,12 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const userId = document.getElementById("api").textContent.trim();
-        console.log('User ID:', userId);
 
         const socket = new SockJS('/ws');
         const stompClient = Stomp.over(socket);
 
         stompClient.connect({}, function () {
-            console.log("WebSocket connected!");
-
             stompClient.subscribe('/topic/donation/' + userId, function (message) {
-                console.log("Message received: ", message.body);
-
                 const messageElement = document.getElementById('message');
                 const videoElement = document.getElementById('video');
                 const audioElement = document.getElementById('audio');
@@ -94,8 +89,7 @@
                         videoElement.hidden = true;
                         audioElement.pause();
                         audioElement.hidden = true;
-                    }, 5000);
-
+                    }, data.time);
                 } catch (error) {
                     console.error("Xabar JSON formatida emas", error);
                 }

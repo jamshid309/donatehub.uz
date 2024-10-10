@@ -17,8 +17,8 @@ import donatehub.service.cloud.CloudService;
 
 import static donatehub.domain.constants.UserRole.STREAMER;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<UserInfoForView> getUsersByEnableState(Boolean getEnables, int page, int size) {
         log.info("Foydalanuvchilarni faollik holati bo'yicha qidirish: faol - {}, sahifa - {}, o'lcham - {}", getEnables, page, size);
-        return repo.getAllByEnableAndRoleOrderByFullRegisteredAt(getEnables, PageRequest.of(page, size), STREAMER);
+        return repo.getAllByEnableAndRoleOrderByFullRegistered(getEnables, PageRequest.of(page, size), STREAMER);
     }
 
     @Override
@@ -72,6 +72,18 @@ public class UserServiceImpl implements UserService {
                         HttpStatus.NOT_FOUND
                 )
         );
+    }
+
+    @Override
+    public UserEntity save(UserEntity user) {
+        log.info("Foydalanuvchi saqlanmoqda: {}", user);
+
+        try {
+            return repo.save(user);
+        } catch (Exception e) {
+            log.error("Foydalanuvchi saqlanmadi: {}", user);
+            throw new BaseException("Email yoki username avval foydalanilgan", HttpStatus.CONFLICT);
+        }
     }
 
     @Override
@@ -144,23 +156,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserStatistic> getStatisticsOfRegister(int days) {
-        log.info("Foydalanuvchilar statiskasini olish register bo'yicha: {} - kunlik", days);
-        return repo.getStatisticOfRegister(days);
-    }
-
-    @Override
-    public List<UserStatistic> getStatisticOfLastOnline(int days) {
-        log.info("Foydalanuvchilar statiskasini olish online bo'yicha: {} - kunlik", days);
-        return repo.getStatisticOfLastOnline(days);
-    }
-
-    @Override
     public void fullRegister(UserEntity user, UserUpdateRequest updateReq, MultipartFile profileImg, MultipartFile bannerImg) {
         log.info("Foydalanuvchi to'liq registratsiyadan o'tmoqda: ID - {}", user.getId());
 
         user.setRole(STREAMER);
-        user.setFullRegisteredAt(LocalDateTime.now());
+        user.setFullRegistered(true);
 
         this.update(
                 user.getId(),
@@ -173,8 +173,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserFullStatistic getFullStatistic() {
-        return repo.getFullStatistic();
+    public UserStatistic getUsersStatistic() {
+        return repo.getUsersStatistic();
     }
 
     @Override
@@ -185,5 +185,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserEntity> getAllEnabledUsers() {
         return repo.getAllByEnableTrue();
+    }
+
+    @Override
+    public List<AdminStatisticByGraphic> adminStatisticByGraphic(int days) {
+        return repo.getStatistic(days);
+    }
+
+    @Override
+    public List<UserStatisticByGraphic> userStatisticByGraphic(int days, Long streamerId) {
+        findById(streamerId);
+
+        return repo.getStatisticOfStreamer(days, streamerId);
+    }
+
+    @Override
+    public Optional<UserEntity> findByEmail(String usernameOrEmail) {
+        return repo.findByEmailOrUsername(usernameOrEmail, usernameOrEmail);
     }
 }

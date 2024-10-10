@@ -1,7 +1,9 @@
 package donatehub.domain.projections;
 
-public interface WithdrawFullStatistic {
-    Long getTotalCount();
+import java.time.LocalDate;
+
+public interface WithdrawStatistic {
+    LocalDate getDate();
     Long getPendingCount();
     Long getCompletedCount();
     Long getCanceledCount();

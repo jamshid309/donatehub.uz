@@ -1,5 +1,6 @@
 package donatehub.domain.response;
 
+import donatehub.domain.constants.UserRole;
 import donatehub.domain.entities.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +14,6 @@ import lombok.Setter;
 public class UserProfileResponse {
     public UserProfileResponse(UserEntity user) {
         this.id = user.getId();
-        this.firstName = user.getFirstName();
         this.username = user.getUsername();
         this.description = user.getDescription();
         this.channelUrl = user.getChannelUrl();
@@ -24,6 +24,9 @@ public class UserProfileResponse {
         this.online = user.getOnline();
         this.enable = user.getEnable();
         this.balance = user.getBalance();
+        this.email = user.getEmail();
+        this.role = user.getRole();
+        this.fullRegistered = user.getFullRegistered();
     }
 
     private Long id;
@@ -47,6 +50,12 @@ public class UserProfileResponse {
     private Boolean online;
 
     private Boolean enable;
+
+    private Boolean fullRegistered;
+
+    private String email;
+
+    private UserRole role;
 
     private Float balance;
 }

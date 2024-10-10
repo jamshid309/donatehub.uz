@@ -170,26 +170,6 @@ public class UserController {
     }
 
     @Operation(
-            summary = "Ro'yxatdan o'tgan foydalanuvchilar sonini olish",
-            description = "Berilgan kunlar soniga asoslanib ro'yxatdan o'tgan foydalanuvchilar sonini qaytaradi.",
-            parameters = @Parameter(name = "days", description = "So'rov qilinayotgan kunlar soni", required = true)
-    )
-    @GetMapping("/statistic/register")
-    public List<UserStatistic> getStatisticsOfRegister(@RequestParam int days){
-        return userService.getStatisticsOfRegister(days);
-    }
-
-    @Operation(
-            summary = "Onlayn foydalanuvchilar sonini olish",
-            description = "Berilgan kunlar soniga asoslanib onlayn foydalanuvchilar sonini qaytaradi.",
-            parameters = @Parameter(name = "days", description = "So'rov qilinayotgan kunlar soni. Masalan, 30 - o'tgan 30 kunlik davr uchun", required = true, example = "30")
-    )
-    @GetMapping("/statistic/online")
-    public List<UserStatistic> getStatisticOfLastOnline(@RequestParam int days){
-        return userService.getStatisticOfLastOnline(days);
-    }
-
-    @Operation(
             summary = "Streamerni to'liq register qilish",
             parameters = {
                     @Parameter(name = "streamerId", description = "Streamer identifikatori", required = true),
@@ -221,24 +201,5 @@ public class UserController {
     @GetMapping("/me")
     public UserProfileResponse getMe(@AuthenticationPrincipal UserEntity user){
         return new UserProfileResponse(user);
-    }
-
-    @GetMapping("/full-statistic")
-    @Operation(
-            summary = "Umumiy statistika olish",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Umumiy statistikalar", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserFullStatistic.class)))
-            }
-    )
-    public UserFullStatistic getFullStatistic() {
-        return userService.getFullStatistic();
-    }
-
-    @GetMapping("/profit")
-    @Operation(
-
-    )
-    public ProfitStatistic getProfitStatistic() {
-        return userService.getProfitStatistic();
     }
 }

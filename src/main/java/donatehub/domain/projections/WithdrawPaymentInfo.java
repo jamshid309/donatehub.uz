@@ -1,9 +1,7 @@
 package donatehub.domain.projections;
 
-import donatehub.domain.embeddables.WithdrawPayment;
-
 /**
- * Projection for {@link WithdrawPayment}
+ * Projection for {@link donatehub.domain.entities.WithdrawPayment}
  */
 public interface WithdrawPaymentInfo {
     String getCardNumber();

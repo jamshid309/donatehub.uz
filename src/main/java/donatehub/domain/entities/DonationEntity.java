@@ -1,11 +1,11 @@
 package donatehub.domain.entities;
 
 import donatehub.domain.embeddables.DonationPayment;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.io.Serial;
+import java.io.Serializable;
 
 @Entity(name = "donations_table")
 
@@ -14,7 +14,10 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DonationEntity extends BaseEntity {
+public class DonationEntity extends BaseEntity implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 111L;
+
     @ManyToOne
     private UserEntity streamer;
 
@@ -22,8 +25,6 @@ public class DonationEntity extends BaseEntity {
     private String donaterName;
 
     private String message;
-
-    private Boolean completed;
 
     @Embedded
     private DonationPayment payment;
